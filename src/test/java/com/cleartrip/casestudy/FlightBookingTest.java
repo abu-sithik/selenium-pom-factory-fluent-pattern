@@ -46,12 +46,12 @@ public class FlightBookingTest extends TestBase {
     		ExtentTestManager.startTest(method.getName(), "Test method for verifying whether search summary is rightly displayed when searching for flights");
         
     		ExtentTestManager.getTest().log(LogStatus.INFO, "Launching the browser");
-    		homePage.launch();
-        homePage.selectTripType(TripTypes.ONE_WAY.getTripType());
-        homePage.selectOrigin(Cities.BANGALORE.getCity());
-        homePage.selectDestination(Cities.Delhi.getCity());
-        homePage.selectDate();
-        homePage.clickSearchButton();
+    		homePage.launch()	
+    				.selectTripType(TripTypes.ONE_WAY.getTripType())
+    				.selectOrigin(Cities.BANGALORE.getCity())
+    				.selectDestination(Cities.Delhi.getCity())
+    				.selectDate()
+    				.clickSearchButton();
         
         ExtentTestManager.getTest().log(LogStatus.INFO, "Asserting flight search summary details");
         Assert.assertTrue(

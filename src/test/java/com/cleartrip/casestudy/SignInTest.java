@@ -43,11 +43,12 @@ public class SignInTest extends TestBase {
     		ExtentTestManager.startTest(method.getName(), "Description: Test method for verifying whether the right error message is "
     				+ "displayed when trying to sign-in w/o entering valid credentials");
     		
-    		ExtentTestManager.getTest().log(LogStatus.INFO, "Launching the browser");
-        homePage.launch();
-        homePage.clickYourTrips();
-        homePage.clickSignInOption();
-        signInPopup.clickSignInButtonInPopup();
+    		ExtentTestManager.getTest().log(LogStatus.INFO, "Launching the homePage");
+        homePage.launch()
+        			.clickYourTrips()
+		        .clickSignInOption()
+		        .clickSignInButtonInPopup();
+        
         ExtentTestManager.getTest().log(LogStatus.INFO, "Asserting Alert message");
         Assert.assertTrue(
                 signInPopup.getErrorMessageDisplayed().contains("There were errors in your submission"),

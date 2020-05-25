@@ -49,10 +49,11 @@ public class SignInPopup {
     /**
      * This method clicks on the "SignIn" Button in the sign-in popup
      */
-    public void clickSignInButtonInPopup() {
+    public SignInPopup clickSignInButtonInPopup() {
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("modal_window"));
         wait.until(ExpectedConditions.elementToBeClickable(signInButton));
         signInButton.click();
+        return this;
     }
 
     /**

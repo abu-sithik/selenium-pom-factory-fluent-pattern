@@ -52,13 +52,13 @@ public class HotelBookingTest extends TestBase {
     	
     		ExtentTestManager.startTest(method.getName(), "Test method for verifying whether search summary is rightly displayed when searching for hotels");
         
-		ExtentTestManager.getTest().log(LogStatus.INFO, "Launching the browser");
-        homePage.launch();
-        homePage.clickHotelsLink();
-        hotelsHomePage.selectLocality(Localities.INDIRANAGAR_BANGALORE.getLocality());
-        hotelsHomePage.selectTravellerOption(TravellerOptions.ROOM_1_ADULT_2.getTravellerOption());
-        hotelsHomePage.clickSearchButton();
-        
+		ExtentTestManager.getTest().log(LogStatus.INFO, "Launching the homePage");
+        homePage.launch()
+        			.clickHotelsLink()
+		        .selectLocality(Localities.INDIRANAGAR_BANGALORE.getLocality())
+		        .selectTravellerOption(TravellerOptions.ROOM_1_ADULT_2.getTravellerOption())
+		        .clickSearchButton();
+		        
         ExtentTestManager.getTest().log(LogStatus.INFO, "Asserting hotel search summary details");
         Assert.assertTrue(hotelResultsPage.isSearchSummaryAvailable(),
                 "Search Summary is not available after clicking the Search Button when searching for flights");

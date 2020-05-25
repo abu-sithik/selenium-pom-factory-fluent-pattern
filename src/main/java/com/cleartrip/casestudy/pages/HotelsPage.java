@@ -73,12 +73,13 @@ public class HotelsPage {
      *
      * @param locality Value of locality
      */
-    public void selectLocality(String locality) {
+    public HotelsPage selectLocality(String locality) {
         wait.until(ExpectedConditions.visibilityOf(localityTextBox));
         localityTextBox.clear();
         localityTextBox.sendKeys(locality);
         wait.until(ExpectedConditions.visibilityOfAllElements(localityOptions));
         localityOptions.get(Indices.INDEX_1.getIndexValue()).click();
+        return this;
     }
 
     /**
@@ -86,16 +87,18 @@ public class HotelsPage {
      *
      * @param travellersOption Value of the traveller option to be selected
      */
-    public void selectTravellerOption(String travellersOption) {
+    public HotelsPage selectTravellerOption(String travellersOption) {
         Select travellerSelect = new Select(travellerSelection);
         travellerSelect.selectByVisibleText(travellersOption);
+        return this;
     }
 
     /**
      * This method clicks the search button
      */
-    public void clickSearchButton() {
+    public HotelResultsPage clickSearchButton() {
         Actions actions = new Actions(driver);
         actions.sendKeys(Keys.ESCAPE).moveToElement(searchButton).click().perform();
+        return new HotelResultsPage(driver);
     }
 }

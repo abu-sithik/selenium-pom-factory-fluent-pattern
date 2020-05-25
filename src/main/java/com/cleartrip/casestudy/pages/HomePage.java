@@ -109,8 +109,9 @@ public class HomePage {
     /**
      * This method launches the home page
      */
-    public void launch() {
+    public HomePage launch() {
         driver.get("https://www.cleartrip.com/");
+        return this;
     }
 
     /**
@@ -118,8 +119,9 @@ public class HomePage {
      *
      * @param tripTypeOption Value of Trip Type
      */
-    public void selectTripType(String tripTypeOption) {
+    public HomePage selectTripType(String tripTypeOption) {
         tripType.findElement(By.xpath("//input[@value='" + tripTypeOption + "']")).click();
+        return this;
     }
 
     /**
@@ -127,58 +129,66 @@ public class HomePage {
      *
      * @param origin Value of Origin
      */
-    public void selectOrigin(String origin) {
+    public HomePage selectOrigin(String origin) {
         this.origin.clear();
         this.origin.sendKeys(origin);
         wait.until(ExpectedConditions.visibilityOfAllElements(originOptions));
         originOptions.get(Indices.INDEX_0.getIndexValue()).click();
+        return this;
     }
+    
 
     /**
      * This method selects the destination
      *
      * @param destination Value of Destination
      */
-    public void selectDestination(String destination) {
+    public HomePage selectDestination(String destination) {
         this.destination.clear();
         this.destination.sendKeys(destination);
         wait.until(ExpectedConditions.visibilityOfAllElements(destOptions));
         destOptions.get(Indices.INDEX_0.getIndexValue()).click();
+        return this;
     }
 
     /**
      * This method picks the date from the date picker
      */
-    public void selectDate() {
+    public HomePage selectDate() {
         datePicker.click();
+        return this;
     }
 
     /**
      * This method clicks on the search button after
      */
-    public void clickSearchButton() {
+    public FlightResultsPage clickSearchButton() {
         searchButton.click();
+        return new FlightResultsPage(driver);
     }
 
     /**
      * This method clicks on the "Hotels" link in the home page
      */
-    public void clickHotelsLink() {
+    public HotelsPage clickHotelsLink() {
         hotelLink.click();
+        return new HotelsPage(driver);
     }
 
     /**
      * This method clicks on the "Your Tripis" link on the top right of the page
      */
-    public void clickYourTrips() {
+    public HomePage clickYourTrips() {
         yourTrips.click();
+        return this;
     }
 
     /**
      * This method clicks on the SignIn option which appears after clicking the "Your Trips" options
      */
-    public void clickSignInOption() {
+    public SignInPopup clickSignInOption() {
         signIn.click();
+        return new SignInPopup(driver);
     }
 
 }
