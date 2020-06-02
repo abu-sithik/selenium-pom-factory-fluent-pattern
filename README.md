@@ -105,7 +105,8 @@ In case of error in all import statements
 ![alt text](https://github.com/abu-sithik/selenium-pom-factory-fluent-pattern/blob/master/ExtentReports/package.png?raw=true)
 
 ## Step 1: Create a Page Class<a name="1"></a>
-> First need to create page objects for all the implemented pages in cleartip site – HomePage.java,FlightResultsPage.java,HotelResultsPage.java,HotelsPage.java and SignInPopup.java. Then we have to create a test class that will have an instance of these page objects and will use there implemented methods/actions to create tests.
+> First need to create page objects for all the implemented pages in cleartip site – `HomePage.java`, `FlightResultsPage.java`, `HotelResultsPage.java`, `HotelsPage.java` and `SignInPopup.java`.
+Then we have to create a test class that will have an instance of these page objects and will use the implemented methods/actions to create tests.
 
 > Let’s consider this scenario, where in the home page, user selects flight booking option and enters valid details and on clicking search button, user is redirected to flight results page.
 
