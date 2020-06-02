@@ -420,10 +420,13 @@ public class FlightBookingTest extends TestBase {
 ```
 ## 4) Extent HTML report<a name="4"></a>
 > Test Reports can be found in `workingDir/ExtentReports/ExtentReportResults.html`
+
 **Test Summary**
+
 ![alt text](https://github.com/abu-sithik/selenium-pom-factory-fluent-pattern/blob/master/ExtentReports/overview.png?raw=true)
 
 **Specific Test details**
+
 ![alt text](https://github.com/abu-sithik/selenium-pom-factory-fluent-pattern/blob/master/ExtentReports/specificTest.gif?raw=true)
 
 
