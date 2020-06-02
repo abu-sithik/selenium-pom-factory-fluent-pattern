@@ -3,17 +3,20 @@ This is a simple test project for testing a few scenarios on a [sample flight/ho
 
 # Contents
 * [Framework Details](#FrameworkDetails)
-	* [Test Application](#app)
-	* [Framework - What and Why?](#ww)
-	* [Project structure](#structure)
+  * [Test Application](#app)
+  * [Framework - What and Why?](#ww)
+  * [Project structure](#structure)
 * [Packages](#package)
-	* [Main Package](#main)
-	* [Test Package](#test)
-	* [Reports](#reports)
+  * [Main Package](#main)
+  * [Test Package](#test)
+  * [Reports](#reports)
 * [Installation](#install)
-	* [Steps to follow to setup API automation in local system](#steps)
+  * [Steps to follow to setup API automation in local system](#steps)
 * [Simple Example Test](#example)
-	* [1) Create a simple test](#1)
+  * [Step 1: Create a Page Class](#1)
+  * [Step 2: Create a TestBase Class](#2)
+  * [Step 3: Create a Test Class](#3)
+  * [Step 4: Extent Report](#4)
 
 # Framework Details<a name="FrameworkDetails"></a>
 #### Test Application<a name="app"></a>
@@ -30,7 +33,7 @@ This is a simple test project for testing a few scenarios on a [sample flight/ho
 - The WebDriver is instantiated in such a way that it is static and only one instance will be created and shared across all the test classes. The Driver will only quit once all the tests are done.
 
 - Updated the `pom.xml` file to have the necessary dependencies and plugins.
-	
+  
 
 # Packages<a name="package"></a>
 #### Main Package<a name="main"></a>
@@ -85,5 +88,343 @@ In case of error in all import statements
 
 
 # Simple Example Test<a name="example"></a>
-Now, let's get started with the simple example – a simple flight/hotel booking site.
-### 1) Create a simple test<a name="1"></a>
+
+> Now, let's get started with the simple example – Creating a test for flight booking case using page factory/fluent interface pattern. 
+
+**Test Steps:**
+ - Go to www.cleartrip.com
+ - Select TripType (One Way Trip)
+ - Select Origin (Bangalore)
+ - Select Destination (Delhi)
+ - Select Date (Any random date)
+ - Click on “Search” button
+
+
+> Below image show how page class and test classes created for each application page in different packages.
+Add package image
+
+## Step 1: Create a Page Class<a name="1"></a>
+> First need to create page objects for all the implemented pages in cleartip site – HomePage.java,FlightResultsPage.java,HotelResultsPage.java,HotelsPage.java and SignInPopup.java. Then we have to create a test class that will have an instance of these page objects and will use there implemented methods/actions to create tests.
+
+> Let’s consider this scenario, where in the home page, user selects flight booking option and enters valid details and on clicking search button, user is redirected to flight results page.
+
+**HomePage.Java**
+```
+/**
+ * Page class for Home page
+ */
+public class HomePage {
+
+    /**
+     * Instance of WebDriver
+     */
+    private WebDriver driver;
+
+    /**
+     * Instance of WebDriverWait
+     */
+    private WebDriverWait wait;
+
+    /**
+     * TripType Webelement
+     */
+    @FindBy(xpath = "//nav[@class='row fieldRow tripType']")
+    private WebElement tripType;
+
+
+    /**
+     * Origin Webelement
+     */
+    @FindBy(id = "FromTag")
+    private WebElement origin;
+
+    /**
+     * Origin Options List
+     */
+    @FindBys({
+            @FindBy(id = "ui-id-1"),
+            @FindBy(tagName = "li")
+    })
+    private List<WebElement> originOptions;
+
+    /**
+     * Destination WebElement
+     */
+    @FindBy(id = "ToTag")
+    private WebElement destination;
+
+ ......
+ ......
+ ......
+
+    /**
+     * Constructor for Home page
+     *
+     * @param driver The WebDriver Instance
+     */
+    public HomePage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+        wait = new WebDriverWait(driver, WaitTimes.TIME_5_SECONDS.getWaitTime());
+    }
+
+    /**
+     * This method launches the home page
+     */
+    public HomePage launch() {
+        driver.get("https://www.cleartrip.com/");
+        return this;
+    }
+
+    /**
+     * This method selects the trip type
+     *
+     * @param tripTypeOption Value of Trip Type
+     */
+    public HomePage selectTripType(String tripTypeOption) {
+        tripType.findElement(By.xpath("//input[@value='" + tripTypeOption + "']")).click();
+        return this;
+    }
+
+    /**
+     * This method selects the place of origin
+     *
+     * @param origin Value of Origin
+     */
+    public HomePage selectOrigin(String origin) {
+        this.origin.clear();
+        this.origin.sendKeys(origin);
+        wait.until(ExpectedConditions.visibilityOfAllElements(originOptions));
+        originOptions.get(Indices.INDEX_0.getIndexValue()).click();
+        return this;
+    }
+
+    /**
+     * This method clicks on the search button after
+     */
+    public FlightResultsPage clickSearchButton() {
+        searchButton.click();
+        return new FlightResultsPage(driver);
+    }
+
+    /**
+     * This method clicks on the "Hotels" link in the home page
+     */
+    public HotelsPage clickHotelsLink() {
+        hotelLink.click();
+        return new HotelsPage(driver);
+    }
+
+    /**
+     * This method clicks on the SignIn option which appears after clicking the "Your Trips" options
+     */
+    public SignInPopup clickSignInOption() {
+        signIn.click();
+        return new SignInPopup(driver);
+    }
+
+ ......
+ ......
+ ......
+
+}
+
+```
+ 
+> We have created a page class for ClearTrip's `HomePage` having all the `WebElements` and `Action Methods` associated to homepage using the PageFactory model.  We will be using the these `Action Methods` in our tests by initialize them to perform defined actions on those WebElements to complete our test case. I have mentioned only few weblements and action methods in above example. For complete details of page elements & methods refer `HomePage.java`.
+
+```
+    /**
+     * This method launches the home page
+     *
+     *@returns HomePage
+     */
+    public HomePage launch() {
+        driver.get("https://www.cleartrip.com/");
+        return this;
+    }
+
+    /**
+     * This method selects the trip type
+     *
+     * @param tripTypeOption Value of Trip Type
+     * @returns HomePage
+     */
+    public HomePage selectTripType(String tripTypeOption) {
+        tripType.findElement(By.xpath("//input[@value='" + tripTypeOption + "']")).click();
+        return this;
+    }
+
+```
+
+> In `HomePage.java` you can notice that on top of page object model, we have implemented Fluent interface pattern. For example in the above example code, both `launch` and `selectTripType` methods retruns same `HomePage` object. It uses the `Method Chaining (calling a method returns some object on which further methods can be called)` principle by returning the same HomePage, so that in our tests we can call different methods of `HomePage` in a single line instead of calling different methods with the same object reference separately. In our tests we have to write the `HomePage` object reference once and then call its methods by separating them with a (dot.). For more details refer `FlightBookingTest.java`
+
+
+```
+     /**
+     * This method clicks on the "Hotels" link in the home page
+     * @returns HotelsPage
+     */
+    public HotelsPage clickHotelsLink() {
+        hotelLink.click();
+        return new HotelsPage(driver);
+    }
+```
+
+> At some cases, methods could return object of some other page. For example, in cleartip if user clicks on the Hotelslink button, application would redirect the user to the `HotelsPage`. To achive this `clickHotelsLink` method should return `HotelsPage` object when it invoked (refer above code in `HomePage.java`).
+
+> Similarly, we can define all webelements and methods for fligts results page in `flightResultsPage.java`.
+
+**FlightResultsPage.java**
+```
+/**
+ * Page Class for Flight Results Page
+ */
+public class FlightResultsPage {
+
+    /**
+     * Instance of WebDriver
+     */
+    private WebDriver driver;
+
+    /**
+     * Search Summary WebElement
+     */
+    @FindBy(className = "searchSummary")
+    private WebElement searchSummary;
+
+    /**
+     * Constructor for flight results page
+     * @param driver The Webdriver Instance
+     */
+    public FlightResultsPage(WebDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
+    }
+
+    /**
+     * This method checks whether Search Summary is available in the Flight Results page
+     * @return true if search summary is availabe; Else, false is returned
+     */
+    public boolean isSearchSummaryAvailable() {
+        return searchSummary.isDisplayed();
+    }
+}
+```
+
+## Step 2: Create a TestBase Class<a name="2"></a>
+
+> Create a Base Test Class which is extended in all the Test Classes. So The WebDriver is instantiated in such a way that it is static and only one instance will be created and shared across all the test classes. The Driver will only quit once all the tests are done.
+
+**TestBase.java**
+```
+/**
+ * Base Test Class which is extended Test Classes
+ */
+public abstract class TestBase {
+
+    /**
+     * Static WebDriver Instance
+     */
+    protected static WebDriver driver;
+
+     
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    /**
+     * Suite level setup method where the static instance of the WebDriver is instantiated
+     */
+    @BeforeSuite
+    public static void initDriver() {
+        
+        WebDriverManager.chromedriver().setup();
+    driver = new ChromeDriver();
+        
+    ChromeOptions options = new ChromeOptions();
+
+        // The following statement sets the argument to disable notification in chrome when executing the tests
+        options.addArguments("--disable-notifications");
+        driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
+    }
+
+    
+    /**
+     * Suite level tear-down method to quit the WebDriver instance
+     */
+    @AfterSuite
+    public void quitDriver() {
+        driver.quit();
+    }
+}
+```
+
+## Step 3: Create a Test Class<a name="3"></a>
+
+> In test class, instances of the page classes will be created to access methods in the page classes. Thus, tests are decoupled from the pages/ elements under test. This makes the framework more maintainable.
+
+> So in this `FlightBookingTest` class we have to create the objects of HomePage, FlightResultsPage to access the methods available in those pages.
+
+**FlightBookingTest.java**
+```
+/**
+ * Class containing test for validating search-flight results
+ */
+public class FlightBookingTest extends TestBase {
+
+    /**
+     * Instance of HomePage class
+     */
+    private HomePage homePage;
+
+    /**
+     * Instance of FlightResultsPage class
+     */
+    private FlightResultsPage flightResultsPage;
+
+    /**
+     * Class level test-Setup method that intantiates {@link HomePage} and {@link FlightResultsPage}
+     */
+    @BeforeClass
+    public void testClasSetup() {
+        homePage = new HomePage(driver);
+        flightResultsPage = new FlightResultsPage(driver);
+    }
+
+    /**
+     * Test method for verifying whether search summary is rightly displayed when searching for flights
+     */
+    @Test
+    public void testThatResultsAppearForAOneWayJourney(Method method) {
+      
+        ExtentTestManager.startTest(method.getName(), "Test method for verifying whether search summary is rightly displayed when searching for flights");
+        
+        ExtentTestManager.getTest().log(LogStatus.INFO, "Launching the browser");
+        homePage.launch() 
+            .selectTripType(TripTypes.ONE_WAY.getTripType())
+            .selectOrigin(Cities.BANGALORE.getCity())
+            .selectDestination(Cities.Delhi.getCity())
+            .selectDate()
+            .clickSearchButton();
+        
+        ExtentTestManager.getTest().log(LogStatus.INFO, "Asserting flight search summary details");
+        Assert.assertTrue(
+                flightResultsPage.isSearchSummaryAvailable(),
+                "Search Summary is not available after clicking the Search Button when searching for flights");
+    }
+
+
+}
+```
+## 4) Extent HTML report<a name="4"></a>
+> Test Reports can be found in `workingDir/ExtentReports/ExtentReportResults.html`
+**Test Summary**
+![alt text](https://github.com/abu-sithik/selenium-pom-factory-fluent-pattern/blob/master/ExtentReports/overview.png?raw=true)
+
+**Specific Test details**
+![alt text](https://github.com/abu-sithik/selenium-pom-factory-fluent-pattern/blob/master/ExtentReports/specificTest.gif?raw=true)
+
+
+> So far, we have explored the sample test scenario to understand the page factory and fluent interface pattern in selenium. In real time project, we might have to add a few more classes for helpers and utility classes based on the requirement.

@@ -1,4 +1,4 @@
-package com.cleartrip.casestudy;
+package com.cleartrip.casestudy.tests;
 
 import com.cleartrip.casestudy.pages.FlightResultsPage;
 import com.cleartrip.casestudy.pages.HomePage;

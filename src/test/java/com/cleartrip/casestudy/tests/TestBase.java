@@ -1,4 +1,4 @@
-package com.cleartrip.casestudy;
+package com.cleartrip.casestudy.tests;
 
 
 import org.openqa.selenium.WebDriver;
