@@ -11,7 +11,7 @@ This is a simple test project for testing a few scenarios on a [sample flight/ho
   * [Test Package](#test)
   * [Reports](#reports)
 * [Installation](#install)
-  * [Steps to follow to setup API automation in local system](#steps)
+  * [Steps to follow to setup selenium in local system](#steps)
 * [Simple Example Test](#example)
   * [Step 1: Create a Page Class](#1)
   * [Step 2: Create a TestBase Class](#2)
@@ -83,7 +83,7 @@ In case of error in all import statements
   - Refresh the project
 ````
 **Set up verification**
-  - In business logic package -> Right click on any java file -> run as testng test.
+  - In test package -> Right click on any java file -> run as testng test.
 
 
 
