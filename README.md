@@ -100,8 +100,9 @@ In case of error in all import statements
  - Click on “Search” button
 
 
-> Below image show how page class and test classes created for each application page in different packages.
-Add package image
+> Below image shows how we can create page classes and test classes for the given application pages in different packages.
+
+![alt text](https://github.com/abu-sithik/selenium-pom-factory-fluent-pattern/blob/master/ExtentReports/package.png?raw=true)
 
 ## Step 1: Create a Page Class<a name="1"></a>
 > First need to create page objects for all the implemented pages in cleartip site – HomePage.java,FlightResultsPage.java,HotelResultsPage.java,HotelsPage.java and SignInPopup.java. Then we have to create a test class that will have an instance of these page objects and will use there implemented methods/actions to create tests.
